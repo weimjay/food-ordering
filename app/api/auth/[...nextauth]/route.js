@@ -1,10 +1,22 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
+import mongoose from "mongoose";
+import {User} from "@/models/User";
+import bcrypt from "bcrypt";
+import {MongoDBAdapter} from "@auth/mongodb-adapter";
+import clientPromise from "@/libs/mongoAdapter";
 
 const handler = NextAuth({
+    adapter: MongoDBAdapter(clientPromise),
     providers: [
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
+        }),
         CredentialsProvider({
             name: 'Credentials',
+            id: 'credentials',
             // The credentials is used to generate a suitable form on the sign in page.
             // You can specify whatever fields you are expecting to be submitted.
             // e.g. domain, username, password, 2FA token, etc.
@@ -20,16 +32,11 @@ const handler = NextAuth({
                 // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
                 // You can also use the `req` object to obtain additional parameters
                 // (i.e., the request IP address)
-                const res = await fetch("/your/endpoint", {
-                    method: 'POST',
-                    body: JSON.stringify(credentials),
-                    headers: { "Content-Type": "application/json" }
-                })
-                const user = await res.json()
-
-                // If no error and we have user data, return it
-                if (res.ok && user) {
-                    return user
+                const {email, password} = credentials;
+                mongoose.connect(process.env.MONGO_URL);
+                const user = await User.findOne({email});
+                if (user && bcrypt.compareSync(password, user.password)) {
+                    return user;
                 }
                 // Return null if user data could not be retrieved
                 return null

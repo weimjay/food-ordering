@@ -15,7 +15,7 @@ export default function Hero() {
                     Hello Pizza! Hope you enjoy your Pizza!
                 </p>
                 <div className="flex gap-4 text-sm">
-                    <button className="bg-primary uppercase flex items-center text-white gap-2 px-4 py-2 rounded-full">
+                    <button className="flex justify-center bg-primary uppercase items-center text-white gap-2 px-4 py-2 rounded-full">
                         Order now
                         <Right/>
                     </button>
