@@ -12,7 +12,7 @@ export default function LoginPage() {
         ev.preventDefault();
         setLoginInProgress(true);
 
-        await signIn('credentials', {email, password, callbackUrl: '/'});
+        await signIn('credentials', {email, password});
 
         setLoginInProgress(false);
     }
@@ -37,9 +37,6 @@ export default function LoginPage() {
                     <Image src={'/google.png'} alt={''} width={24} height={24}/>
                     Login with Google
                 </button>
-                <div className="text-center my-4 text-gray-500">
-                    Existing account? <Link className="underline" href={'/login'}>Login here &raquo;</Link>
-                </div>
             </form>
         </section>
     );

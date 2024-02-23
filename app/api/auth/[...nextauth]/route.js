@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import {MongoDBAdapter} from "@auth/mongodb-adapter";
 import clientPromise from "@/libs/mongoAdapter";
 
-const handler = NextAuth({
+export const authOptions = {
     adapter: MongoDBAdapter(clientPromise),
     providers: [
         GoogleProvider({
@@ -15,16 +15,16 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET
         }),
         CredentialsProvider({
-            name: 'Credentials',
             id: 'credentials',
+            name: 'Credentials',
             // The credentials is used to generate a suitable form on the sign in page.
             // You can specify whatever fields you are expecting to be submitted.
             // e.g. domain, username, password, 2FA token, etc.
             // You can pass any HTML attribute to the <input> tag through the object.
-            credentials: {
-                username: { label: "Email", type: "email", placeholder: "text@example.com" },
-                password: { label: "Password", type: "password" }
-            },
+            // credentials: {
+            //     username: { label: "Email", type: "email", placeholder: "text@example.com" },
+            //     password: { label: "Password", type: "password" }
+            // },
             async authorize(credentials, req) {
                 // You need to provide your own logic here that takes the credentials
                 // submitted and returns either a object representing a user or value
@@ -35,6 +35,8 @@ const handler = NextAuth({
                 const {email, password} = credentials;
                 mongoose.connect(process.env.MONGO_URL);
                 const user = await User.findOne({email});
+
+                console.log(user);
                 if (user && bcrypt.compareSync(password, user.password)) {
                     return user;
                 }
@@ -43,6 +45,8 @@ const handler = NextAuth({
             }
         })
     ]
-});
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST }

@@ -2,12 +2,14 @@ import {model, models, Schema} from "mongoose";
 import bcrypt from "bcrypt";
 
 const UserSchema = new Schema({
+    name: {type: String},
     email: {type: String, required: true, unique: true},
     password: {
         type: String,
         required: true,
         // min: [6, 'Password must be at least 6, got {VALUE}'],
     },
+    image: {type: String},
 }, {timestamps: true});
 
 UserSchema.post('validate', function (user) {
