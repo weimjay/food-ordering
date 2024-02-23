@@ -3,6 +3,8 @@ import {useSession} from "next-auth/react";
 import {redirect} from "next/navigation";
 import Image from 'next/image';
 import {useEffect, useState} from "react";
+import ProcessBox from "@/components/layout/ProcessBox";
+import CompleteBox from "@/components/layout/CompleteBox";
 
 export default function ProfilePage() {
     const session = useSession();
@@ -69,14 +71,13 @@ export default function ProfilePage() {
             </h1>
             <div className="max-w-md mx-auto">
                 {saved && (
-                    <h2 className="text-center bg-green-100 p-4 rounded-lg border-2 border-green-300">
-                        Profile saved!
-                    </h2>
+                    <CompleteBox>Profile saved!</CompleteBox>
                 )}
                 {isSaving && (
-                    <h2 className="text-center bg-blue-100 p-4 rounded-lg border-2 border-blue-300">
-                        Saving!
-                    </h2>
+                    <ProcessBox>Saving...</ProcessBox>
+                )}
+                {isUploading && (
+                    <ProcessBox>Uploading...</ProcessBox>
                 )}
                 <div className="flex gap-4 items-center">
                     <div>
