@@ -5,12 +5,12 @@ export default function MenuItem({image, name, description, basePrice}) {
             <div className="text-center">
                 <img className="max-h-auto max-h-24 block mx-auto" src={image} alt="pizza"/>
             </div>
-            <h4 className="font-semibold text-xl my-3">Pepperoni Pizza</h4>
-            <p className="text-gray-500 text-sm">
-                Lorem ipsum dolor sit amet, this is a delicious pizza ever!
+            <h4 className="font-semibold text-xl my-3">{name}</h4>
+            <p className="text-gray-500 text-sm line-clamp-3">
+                {description}
             </p>
             <button className="mt-4 bg-primary text-white rounded-full px-8 py-2">
-                Add to cart $12
+                Add to cart ${basePrice}
             </button>
         </div>
     );

@@ -17,7 +17,7 @@ export default function NewMenuPage() {
     async function handleFormSubmit(ev, fields) {
         ev.preventDefault();
         const savingPromise = new Promise(async (resolve, reject) => {
-            const response = await fetch('/api/menu', {
+            const response = await fetch('/api/menu-items', {
                 method: 'POST',
                 body: JSON.stringify(fields),
                 headers: {'Content-Type': 'application/json'},
@@ -38,7 +38,7 @@ export default function NewMenuPage() {
     }
 
     if (redirectToItems) {
-        return redirect('/menu');
+        return redirect('/menu-items');
     }
 
     if (loading) {
@@ -53,7 +53,7 @@ export default function NewMenuPage() {
         <section className="mt-8 max-w-2xl mx-auto">
             <UserTabs isAdmin={data.admin}/>
             <div className="mt-8">
-                <Link href={'/menu'} className="button">
+                <Link href={'/menu-items'} className="button">
                     <span>Show all menu items</span>
                     <Left />
                 </Link>

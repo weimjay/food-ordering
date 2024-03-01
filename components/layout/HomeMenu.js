@@ -8,7 +8,7 @@ export default function HomeMenu() {
 
     const [bestSellers, setBestSellers] = useState([]);
     useEffect(() => {
-        fetch('/api/menu').then(response => {
+        fetch('/api/menu-items').then(response => {
             response.json().then(items => {
                 const bestSellers = items.slice(-3);
                 setBestSellers(bestSellers);
@@ -31,7 +31,7 @@ export default function HomeMenu() {
             </div>
             <div className="grid grid-cols-3 gap-4">
                 {bestSellers?.length > 0 && bestSellers.map(item => (
-                    <MenuItem />
+                    <MenuItem key={item._id} {...item}/>
                 ))}
             </div>
         </section>
