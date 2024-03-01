@@ -3,45 +3,33 @@ import {useSession} from "next-auth/react";
 import {redirect} from "next/navigation";
 import Image from 'next/image';
 import {useEffect, useState} from "react";
-import ProcessBox from "@/components/layout/ProcessBox";
-import CompleteBox from "@/components/layout/CompleteBox";
+import toast from "react-hot-toast";
+import Link from "next/link";
+import UserTabs from "@/components/layout/UserTabs";
+import EditableImage from "@/components/layout/EditableImage";
+import UserForm from "@/components/layout/UserForm";
 
 export default function ProfilePage() {
     const session = useSession();
-    const [userName, setUserName] = useState('');
-    const [image, setImage] = useState('');
-    const [isSaving, setIsSaving] = useState(false);
-    const [isUploading, setIsUploading] = useState(false);
-    const [saved, setSaved] = useState(false);
 
+    const [user, setUser] = useState(null);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [profileFetched, setProfileFetched] = useState(false);
     const {status} = session;
 
     useEffect(() => {
         if (status === 'authenticated') {
-            setUserName(session.data.user.name);
-            setImage(session.data.user.image);
+            fetch('/api/profile').then(response => {
+                response.json().then(profile => {
+                    setUser(profile);
+                    setIsAdmin(profile.admin);
+                    setProfileFetched(true);
+                })
+            });
         }
     }, [session, status]);
 
-    async function handleAvatarChange(ev) {
-        setIsUploading(true);
-        const files = ev.target.files;
-        if (files?.length === 1) {
-            const data = new FormData;
-            data.set('file', files[0]);
-            const res = await fetch('/api/upload', {
-                method: 'POST',
-                body: data,
-            })
-            const resData = await res.json();
-            if (resData.ok && resData.filepath) {
-                setImage(resData.filepath);
-            }
-        }
-        setIsUploading(false);
-    }
-
-    if (status === 'loading') {
+    if (status === 'loading' || !profileFetched) {
         return 'Loading';
     }
 
@@ -49,58 +37,32 @@ export default function ProfilePage() {
         return redirect('/login');
     }
 
-    async function handleProfileUpdate(ev) {
+    async function handleProfileUpdate(ev, data) {
         ev.preventDefault();
-        setIsSaving(true);
-        setSaved(false);
-        const res = await fetch('/api/profile', {
-            method: 'PUT',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({name: userName, image}),
+        const savingPromise = new Promise(async (resolve, reject) => {
+            const res = await fetch('/api/profile', {
+                method: 'PUT',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            })
+            if (res.ok) {
+                resolve();
+            } else {
+                reject();
+            }
+        });
+        await toast.promise(savingPromise, {
+            loading: 'Saving...',
+            success: 'Profile saved!',
+            error: 'Got an error, please try again.',
         })
-        if (res.ok) {
-            setSaved(true);
-        }
-        setIsSaving(false);
     }
 
     return (
         <section className="mt-8">
-            <h1 className="text-center text-primary text-4xl mb-4">
-                Profile
-            </h1>
-            <div className="max-w-md mx-auto">
-                {saved && (
-                    <CompleteBox>Profile saved!</CompleteBox>
-                )}
-                {isSaving && (
-                    <ProcessBox>Saving...</ProcessBox>
-                )}
-                {isUploading && (
-                    <ProcessBox>Uploading...</ProcessBox>
-                )}
-                <div className="flex gap-4 items-center">
-                    <div>
-                        <div className="p-2 rounded-lg relative">
-                            {image && (
-                                <Image className="rounded-lg mb-1" src={image}
-                                       width={80} height={80} alt={'avatar'} />
-                            )}
-                            <label>
-                                <input type="file" className="hidden" onChange={handleAvatarChange}/>
-                                <span className="block border border-gray-300 rounded-lg p-2
-                                text-center cursor-pointer">Edit</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <form className="grow" onSubmit={handleProfileUpdate}>
-                        <input type="text" placeholder="First and last name" value={userName}
-                               onChange={ev => setUserName(ev.target.value)}/>
-                        <input type="text" disabled={true} value={session.data.user.email}/>
-                        <button type={"submit"}>Save</button>
-                    </form>
-                </div>
+            <UserTabs isAdmin={isAdmin} />
+            <div className="max-w-2xl mx-auto mt-8">
+                <UserForm user={user} onSubmit={handleProfileUpdate}/>
             </div>
         </section>
     );

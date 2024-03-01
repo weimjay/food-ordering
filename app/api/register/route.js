@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 export async function POST(req) {
     const body = await req.json();
     const pwd = body.password;
-    if (!pass?.length || pass.length < 5) {
+    if (!pwd?.length || pwd.length < 5) {
         new Error('password must be at least 5 characters');
     }
 

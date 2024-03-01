@@ -12,7 +12,9 @@ export async function POST(req) {
     const date = new Date();
     const month = date.getMonth() + 1;
     const monthStr = month < 10 ? '0'+month : String(month);
-    const filename = date.getFullYear() + monthStr + '' + date.getDate() + '' + Date.now() + '.' + ext;
+    const day = date.getDate();
+    const dayStr = day < 10 ? '0'+day : String(day);
+    const filename = date.getFullYear() + monthStr + '' + dayStr + '_' + GenNonDuplicateID(3) + '.' + ext;
 
     const buffer = Buffer.from(await file.arrayBuffer());
     try {
@@ -23,4 +25,10 @@ export async function POST(req) {
         console.log("Error occurred ", error);
         return Response.json({ok: false, message: "Failed"});
     }
+}
+
+function GenNonDuplicateID(randomLength){
+    let idStr = Date.now().toString(36)
+    idStr += Math.random().toString(36).slice(2, randomLength)
+    return idStr
 }
