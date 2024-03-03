@@ -10,7 +10,8 @@ export default function HomeMenu() {
     useEffect(() => {
         fetch('/api/menu-items').then(response => {
             response.json().then(items => {
-                const bestSellers = items.slice(-3);
+                const pizzaCategory = items[0].category;
+                const bestSellers = items.filter(v => v.category === pizzaCategory).slice(-3);
                 setBestSellers(bestSellers);
             });
         })
