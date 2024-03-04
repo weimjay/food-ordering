@@ -1,5 +1,8 @@
+import AddToCartButton from "@/components/menu/AddToCartButton";
+
 export default function MenuItemTile({onAddToCart, ...item}) {
     const {image, name, description, basePrice, sizes, extraIngredients} = item;
+    const hasSizesOrExtras = sizes?.length > 0 || extraIngredients?.length > 0;
     return (
         <div className="bg-gray-200 p-4 rounded-lg text-center group
                 hover:bg-white hover:shadow-md hover:shadow-black/25 transition-all">
@@ -10,14 +13,12 @@ export default function MenuItemTile({onAddToCart, ...item}) {
             <p className="text-gray-500 text-sm line-clamp-3">
                 {description}
             </p>
-            <button onClick={onAddToCart} type="button"
-                    className="mt-4 bg-primary text-white rounded-full px-8 py-2">
-                {(sizes?.length > 0 || extraIngredients?.length > 0) ? (
-                    <span>Add to cart from ${basePrice}</span>
-                ) : (
-                    <span>Add to cart ${basePrice}</span>
-                )}
-            </button>
+            <AddToCartButton
+                hasSizesOrExtras={hasSizesOrExtras}
+                onClick={onAddToCart}
+                basePrice={basePrice}
+                image={image}
+            />
         </div>
     );
 }
