@@ -1,4 +1,4 @@
-import NextAuth from "next-auth";
+import NextAuth, {getServerSession} from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import mongoose from "mongoose";
@@ -46,6 +46,19 @@ export const authOptions = {
         })
     ]
 };
+
+export async function isAdmin() {
+    const session = await getServerSession(authOptions);
+    const email = session?.user?.email;
+    if (!email) {
+        return false;
+    }
+    const userInfo = await User.findOne({email});
+    if (!userInfo) {
+        return false;
+    }
+    return userInfo.admin;
+}
 
 const handler = NextAuth(authOptions);
 
