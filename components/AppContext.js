@@ -40,7 +40,7 @@ export function AppProvider({children}) {
             saveCartProductsToLocalStorage(newCartProducts);
             return newCartProducts;
         })
-        toast.success('Product removed');
+        toast.success('Product removed index:'+indexToRemove);
     }
 
     function saveCartProductsToLocalStorage(cartProducts) {
@@ -79,7 +79,7 @@ export function AppProvider({children}) {
 
     return (
         <SessionProvider>
-            <CartContext.Provider value={{cartProducts, setCartProducts, addToCart, decrCartQuantity, removeCartProduct}}>
+            <CartContext.Provider value={{cartProducts, setCartProducts, addToCart, decrCartQuantity, removeCartProduct, clearCart}}>
                 {children}
             </CartContext.Provider>
         </SessionProvider>

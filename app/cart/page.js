@@ -6,9 +6,10 @@ import {CartContext, cartProductPrice} from "@/components/AppContext";
 import Trash from "@/components/icons/Trash";
 import AddressInput from "@/components/layout/AddressInput";
 import useProfile from "@/components/UseProfile";
+import toast from "react-hot-toast";
 
 export default function CartPage() {
-    const {cartProducts, addToCart, decrCartQuantity, removeCartProduct} = useContext(CartContext);
+    const {cartProducts, addToCart, decrCartQuantity, removeCartProduct, clearCart} = useContext(CartContext);
     const [address, setAddress] = useState({phone: '', street: '', postcode: '', city: '', country: ''});
     const {data: profile} = useProfile();
 
@@ -29,6 +30,28 @@ export default function CartPage() {
             return {...prevAddress, [propName]: value};
         })
     }
+    async function handleCartCheckout(ev) {
+        ev.preventDefault();
+        const createPromise = new Promise(async (resolve, reject) => {
+            const data = {cartProducts, totalPrice, address}
+            const res = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data),
+            });
+            if (res.ok) {
+                clearCart();
+                resolve();
+            } else {
+                reject();
+            }
+        })
+        await toast.promise(createPromise, {
+            loading: 'Preparing your order...',
+            success: 'Redirecting to payment',
+            error: 'Got an error, please try again.'
+        })
+    }
 
     return (
         <section className="mt-8">
@@ -38,10 +61,10 @@ export default function CartPage() {
             <div className="mt-8 grid gap-8 grid-cols-2">
                 <div>
                     {cartProducts?.length === 0 && (
-                        <div>Empty here</div>
+                        <div className="text-2xl">Your cart is empty...</div>
                     )}
                     {cartProducts?.length > 0 && cartProducts.map((product, index) => (
-                        <div key={product._id} className="flex items-center gap-4 border-b py-4">
+                        <div key={product._id+"-"+index} className="flex items-center gap-4 border-b py-4">
                             <div className="w-24">
                                 <Image src={product.image} alt={''} width={240} height={240} />
                             </div>
@@ -71,14 +94,16 @@ export default function CartPage() {
                                 ${cartProductPrice(product)}
                             </div>
                             <div className="ml-2">
-                                <button onClick={() => removeCartProduct(index)} className="p-2"><Trash/></button>
+                                <button onClick={() => removeCartProduct(index)} className="p-2"><Trash className="w-5 h-5"/></button>
                             </div>
                         </div>
                     ))}
-                    <div className="py-4 text-right pr-16">
-                        <span className="text-gray-500">Subtotal:</span>
-                        <span className="text-lg font-semibold pl-2">${totalPrice}</span>
-                    </div>
+                    {cartProducts?.length > 0 && (
+                        <div className="py-4 text-right pr-16">
+                            <span className="text-gray-500">Subtotal:</span>
+                            <span className="text-lg font-semibold pl-2">${totalPrice}</span>
+                        </div>
+                    )}
                 </div>
                 <div className="bg-gray-100 p-4 rounded-lg">
                     <h2 className="text-2xl mb-2">Checkout</h2>
@@ -88,7 +113,7 @@ export default function CartPage() {
                             addressProps={address}
                             setAddressProps={handleAddressChange}
                         />
-                        <button type="submit">Pay ${totalPrice}</button>
+                        <button onClick={handleCartCheckout} type="submit">Pay ${totalPrice}</button>
                     </form>
                 </div>
             </div>

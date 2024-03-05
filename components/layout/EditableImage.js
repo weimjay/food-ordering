@@ -35,7 +35,7 @@ export default function EditableImage({link, setLink}) {
                 <Image className="rounded-lg mb-1" src={link} width={128} height={128} alt={'avatar'} />
             )}
             {!link && (
-                <div className="text-center bg-gray-200 p-4 text-gray-500 rounded-lg mb-1">
+                <div className="text-center justify-center bg-gray-200 p-4 text-gray-500 rounded-lg mb-1">
                     No image
                 </div>
             )}
