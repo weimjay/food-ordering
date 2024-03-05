@@ -8,8 +8,8 @@ import AddressInput from "@/components/layout/AddressInput";
 import useProfile from "@/components/UseProfile";
 
 export default function CartPage() {
-    const {cartProducts, removeCartProduct} = useContext(CartContext);
-    const [address, setAddress] = useState({});
+    const {cartProducts, addToCart, decrCartQuantity, removeCartProduct} = useContext(CartContext);
+    const [address, setAddress] = useState({phone: '', street: '', postcode: '', city: '', country: ''});
     const {data: profile} = useProfile();
 
     useEffect(() => {
@@ -41,7 +41,7 @@ export default function CartPage() {
                         <div>Empty here</div>
                     )}
                     {cartProducts?.length > 0 && cartProducts.map((product, index) => (
-                        <div className="flex items-center gap-4 border-b py-4">
+                        <div key={product._id} className="flex items-center gap-4 border-b py-4">
                             <div className="w-24">
                                 <Image src={product.image} alt={''} width={240} height={240} />
                             </div>
@@ -58,11 +58,20 @@ export default function CartPage() {
                                     </div>
                                 )}
                             </div>
+                            <div className="flex items-center justify-between">
+                                <span className="rounded-full border w-8 h-8 flex items-center justify-center cursor-pointer"
+                                    onClick={() => decrCartQuantity(product)}>-
+                                </span>
+                                <span className="m-2">{product.quantity}</span>
+                                <span className="rounded-full border w-8 h-8 flex items-center justify-center cursor-pointer"
+                                    onClick={() => addToCart(product, product.size, product.extras)}>+
+                                </span>
+                            </div>
                             <div className="text-lg font-semibold">
                                 ${cartProductPrice(product)}
                             </div>
                             <div className="ml-2">
-                                <button onClick={() => removeCartProduct(index)} className="p-2"><Trash /></button>
+                                <button onClick={() => removeCartProduct(index)} className="p-2"><Trash/></button>
                             </div>
                         </div>
                     ))}
@@ -72,7 +81,8 @@ export default function CartPage() {
                     </div>
                 </div>
                 <div className="bg-gray-100 p-4 rounded-lg">
-                    <h2>Checkout</h2>
+                    <h2 className="text-2xl mb-2">Checkout</h2>
+                    <span>Address</span>
                     <form>
                         <AddressInput
                             addressProps={address}

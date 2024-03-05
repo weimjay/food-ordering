@@ -15,6 +15,7 @@ export function cartProductPrice(cartProduct) {
             price += extra.price;
         }
     }
+    price *= cartProduct.quantity;
     return price;
 }
 
@@ -48,16 +49,37 @@ export function AppProvider({children}) {
         }
     }
     function addToCart(product, size=null, extras=[]) {
-        setCartProducts(prevProducts => {
-            const cartProduct = {...product, size, extras};
-            const newProducts = [...prevProducts, cartProduct];
-            saveCartProductsToLocalStorage(newProducts);
-            return newProducts;
-        })
+        const existingItem = cartProducts.find(item => item._id === product._id);
+        let updateProducts;
+        if (existingItem && !existingItem.size && existingItem.extras.length === 0) {
+            updateProducts = cartProducts.map(item => {
+                if (item._id === product._id) {
+                    return {...item, quantity: item.quantity + 1};
+                }
+                return item;
+            });
+        } else {
+            const {_id, name, image, basePrice} = product;
+            updateProducts = [...cartProducts, {_id, name, image, basePrice, quantity: 1, size, extras}];
+        }
+        setCartProducts(updateProducts);
+        saveCartProductsToLocalStorage(updateProducts);
+        return updateProducts;
     }
+    function decrCartQuantity(product) {
+        const updateProducts = cartProducts.map(item => {
+            if (item._id === product._id && item.quantity > 1) {
+                return { ...item, quantity: item.quantity - 1 };
+            }
+            return item;
+        });
+        setCartProducts(updateProducts);
+        saveCartProductsToLocalStorage(updateProducts);
+    }
+
     return (
         <SessionProvider>
-            <CartContext.Provider value={{cartProducts, setCartProducts, addToCart, removeCartProduct}}>
+            <CartContext.Provider value={{cartProducts, setCartProducts, addToCart, decrCartQuantity, removeCartProduct}}>
                 {children}
             </CartContext.Provider>
         </SessionProvider>
