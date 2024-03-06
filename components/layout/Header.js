@@ -43,8 +43,8 @@ export default function Header() {
 
                 <Link href={'/cart'} className="relative">
                     <ShoppingCart />
-                    <span className="absolute -top-2 -right-4 bg-primary text-white text-xs py-1 px-1 rounded-full leading-3">
-                        {cartProducts?.length}
+                    <span className="absolute -top-2 -right-4 w-5 h-5 bg-primary text-white text-xs flex items-center justify-center py-1 px-1 rounded-full">
+                        {cartProducts?.reduce((accumulator, currentItem) => accumulator + currentItem.quantity, 0)}
                     </span>
                 </Link>
 

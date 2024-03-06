@@ -81,7 +81,7 @@ export default function CartPage() {
                         <CartProduct key={product._id + "-" + index} product={product} index={index} {...cartCtx} />
                     ))}
                     {cartProducts?.length > 0 && (
-                        <div className="ml-72 mr-[3.6rem] ">
+                        <div className="ml-72 mr-[3.7rem] ">
                             <table className="w-full text-right border-collapse">
                                 <tbody>
                                 <tr>

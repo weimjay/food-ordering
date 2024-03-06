@@ -26,7 +26,7 @@ export default function CartProduct({product, index, readonly, ...cartCtx}) {
                     <span
                         className="rounded-full border w-8 h-8 flex items-center justify-center cursor-pointer"
                         onClick={() => cartCtx.decrCartQuantity(product)}>-
-                </span>
+                    </span>
                 )}
                 <span className="m-2">{product.quantity}</span>
                 {!readonly && (
@@ -35,7 +35,7 @@ export default function CartProduct({product, index, readonly, ...cartCtx}) {
                     </span>
                 )}
             </div>
-            <div className="text-lg font-semibold">
+            <div className="text-lg font-semibold w-10 text-right">
                 ${cartProductPrice(product)}
             </div>
             {!readonly && (
