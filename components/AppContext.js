@@ -32,13 +32,13 @@ export function AppProvider({children}) {
 
     function clearCart() {
         setCartProducts([]);
-        saveCartProductsToLocalStorage([]);
+        saveCartProductsToDb([]);
     }
 
     function removeCartProduct(indexToRemove) {
         setCartProducts(prevCartProducts => {
             const newCartProducts = prevCartProducts.filter((v, index) => index !== indexToRemove);
-            saveCartProductsToLocalStorage(newCartProducts);
+            saveCartProductsToDb(newCartProducts);
             return newCartProducts;
         })
         toast.success('Product removed');
@@ -48,7 +48,6 @@ export function AppProvider({children}) {
         fetch('/api/cart').then(response => {
             response.json().then(resData => {
                 if (resData.ok) {
-                    console.log(resData);
                     setCartProducts(resData.data.products);
                 }
             })
@@ -67,9 +66,7 @@ export function AppProvider({children}) {
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({cartProducts}),
         }).then(response => {
-            if (!response.ok) {
-                toast('Got an error, please try again.');
-            }
+            return response.json();
         })
     }
 
@@ -99,7 +96,7 @@ export function AppProvider({children}) {
             return item;
         });
         setCartProducts(updateProducts);
-        saveCartProductsToLocalStorage(updateProducts);
+        saveCartProductsToDb(updateProducts);
     }
 
     return (
