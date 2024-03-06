@@ -22,6 +22,7 @@ export default function MenuItem(menuItem) {
             addToCart(menuItem);
         }
         setShowPopup(false);
+        toast.success('Added to cart!');
     }
     function handleExtraClick(ev, extra) {
         const checked = ev.target.checked;
