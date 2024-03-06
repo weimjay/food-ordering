@@ -5,7 +5,8 @@ import {authOptions} from "@/app/api/auth/[...nextauth]/route";
 import {Menu} from "@/models/Menu";
 
 export async function POST(req) {
-    const {cartProducts, totalPrice, address} = await req.json();
+    const {cartProducts, subTotal, delivery, address} = await req.json();
+    const totalPrice = subTotal + delivery;
     const session = await getServerSession(authOptions);
     const email = session?.user?.email;
     if (!email) {
@@ -16,7 +17,7 @@ export async function POST(req) {
     }
     mongoose.connect(process.env.MONGO_URL);
 
-    let calcTotalPrice = 0;
+    let calcSubTotal = 0;
     for (const cartProduct of cartProducts) {
         const productInfo = await Menu.findById(cartProduct._id);
 
@@ -32,14 +33,16 @@ export async function POST(req) {
                 productPrice += extraInfo.price;
             }
         }
-        calcTotalPrice += productPrice;
+        calcSubTotal += productPrice * cartProduct.quantity;
     }
-    if (totalPrice !== calcTotalPrice) {
+    if (subTotal !== calcSubTotal) {
         return Response.json({ok: false, message: "Cart items changed, please try again!"});
     }
 
     const order = {
         email,
+        subTotal,
+        delivery,
         totalPrice,
         products: cartProducts,
         address: address,
@@ -47,7 +50,7 @@ export async function POST(req) {
     };
     const res = await Order.create(order);
     if (res._id) {
-        return Response.json({ok: true, message: "Order creation success!"});
+        return Response.json({ok: true, message: "Order checkout success!", redirect: "/orders/"+res._id});
     }
-    return Response.json({ok: false, message: "Order creation failed!"});
+    return Response.json({ok: false, message: "Order checkout failed!"});
 }

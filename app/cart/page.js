@@ -7,9 +7,14 @@ import Trash from "@/components/icons/Trash";
 import AddressInput from "@/components/layout/AddressInput";
 import useProfile from "@/components/UseProfile";
 import toast from "react-hot-toast";
+import CartProduct from "@/components/menu/CartProduct";
+import Link from "next/link";
+import Right from "@/components/icons/Right";
 
 export default function CartPage() {
     const {cartProducts, addToCart, decrCartQuantity, removeCartProduct, clearCart} = useContext(CartContext);
+    const cartCtx = {addToCart, decrCartQuantity, removeCartProduct, clearCart};
+    const delivery = 5;
     const [address, setAddress] = useState({phone: '', street: '', postcode: '', city: '', country: ''});
     const {data: profile} = useProfile();
 
@@ -21,9 +26,9 @@ export default function CartPage() {
         }
     }, [profile]);
 
-    let totalPrice = 0;
+    let subTotal = 0;
     for (const p of cartProducts) {
-        totalPrice += cartProductPrice(p);
+        subTotal += cartProductPrice(p);
     }
     function handleAddressChange(propName, value) {
         setAddress(prevAddress => {
@@ -32,19 +37,23 @@ export default function CartPage() {
     }
     async function handleCartCheckout(ev) {
         ev.preventDefault();
-        const createPromise = new Promise(async (resolve, reject) => {
-            const data = {cartProducts, totalPrice, address}
-            const res = await fetch('/api/checkout', {
+        const createPromise = new Promise( async (resolve, reject) => {
+            const data = {cartProducts, subTotal, delivery, address}
+            await fetch('/api/checkout', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify(data),
+            }).then(response => {
+                response.json().then(resData => {
+                    if (resData.ok) {
+                        clearCart();
+                        resolve();
+                        window.location = resData.redirect;
+                    } else {
+                        reject();
+                    }
+                });
             });
-            if (res.ok) {
-                clearCart();
-                resolve();
-            } else {
-                reject();
-            }
         })
         await toast.promise(createPromise, {
             loading: 'Preparing your order...',
@@ -61,61 +70,51 @@ export default function CartPage() {
             <div className="mt-8 grid gap-8 grid-cols-2">
                 <div>
                     {cartProducts?.length === 0 && (
-                        <div className="text-2xl">Your cart is empty...</div>
+                        <div className="flex text-xl">
+                            <div className="mr-2">Your cart is empty...</div>
+                            <Link className="flex text-primary items-center underline gap-1" href={'/menu'}>
+                                Order now <Right/>
+                            </Link>
+                        </div>
                     )}
                     {cartProducts?.length > 0 && cartProducts.map((product, index) => (
-                        <div key={product._id+"-"+index} className="flex items-center gap-4 border-b py-4">
-                            <div className="w-24">
-                                <Image src={product.image} alt={''} width={240} height={240} />
-                            </div>
-                            <div className="grow">
-                                <h3 className="font-semibold">{product.name}</h3>
-                                {product.size && (
-                                    <div className="text-sm">Size: <span>{product.size.name}</span></div>
-                                )}
-                                {product.extras?.length > 0 && (
-                                    <div className="text-sm text-gray-500">
-                                        {product.extras.map(extra => (
-                                            <div>{extra.name} ${extra.price}</div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                            <div className="flex items-center justify-between">
-                                <span className="rounded-full border w-8 h-8 flex items-center justify-center cursor-pointer"
-                                    onClick={() => decrCartQuantity(product)}>-
-                                </span>
-                                <span className="m-2">{product.quantity}</span>
-                                <span className="rounded-full border w-8 h-8 flex items-center justify-center cursor-pointer"
-                                    onClick={() => addToCart(product, product.size, product.extras)}>+
-                                </span>
-                            </div>
-                            <div className="text-lg font-semibold">
-                                ${cartProductPrice(product)}
-                            </div>
-                            <div className="ml-2">
-                                <button onClick={() => removeCartProduct(index)} className="p-2"><Trash className="w-5 h-5"/></button>
-                            </div>
-                        </div>
+                        <CartProduct key={product._id + "-" + index} product={product} index={index} {...cartCtx} />
                     ))}
                     {cartProducts?.length > 0 && (
-                        <div className="py-4 text-right pr-16">
-                            <span className="text-gray-500">Subtotal:</span>
-                            <span className="text-lg font-semibold pl-2">${totalPrice}</span>
+                        <div className="ml-72 mr-[3.6rem] ">
+                            <table className="w-full text-right border-collapse">
+                                <tbody>
+                                <tr>
+                                    <td className="pt-2 pr-2 text-gray-500">Subtotal:</td>
+                                    <td className="pt-2 pr-1 text-lg text-right font-semibold">${subTotal}</td>
+                                </tr>
+                                <tr>
+                                    <td className="pr-2 text-gray-500">Delivery:</td>
+                                    <td className="pr-1 text-lg text-right font-semibold">${delivery}</td>
+                                </tr>
+                                <tr className="text-primary text-lg font-semibold">
+                                    <td className="py-1 pr-2  ">Total:</td>
+                                    <td className="py-1 pr-1 text-right">${subTotal + delivery}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     )}
                 </div>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                    <h2 className="text-2xl mb-2">Checkout</h2>
-                    <span>Address</span>
-                    <form>
-                        <AddressInput
-                            addressProps={address}
-                            setAddressProps={handleAddressChange}
-                        />
-                        <button onClick={handleCartCheckout} type="submit">Pay ${totalPrice}</button>
-                    </form>
-                </div>
+                {cartProducts?.length > 0 && (
+                    <div className="bg-gray-100 p-4 rounded-lg">
+                        <h2 className="text-2xl mb-2">Checkout</h2>
+                        <span>Address</span>
+                        <form>
+                            <AddressInput
+                                addressProps={address}
+                                setAddressProps={handleAddressChange}
+                            />
+                            <button onClick={handleCartCheckout} type="submit">Pay ${subTotal + delivery}</button>
+                        </form>
+                    </div>
+                )}
             </div>
         </section>
     );

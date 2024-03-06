@@ -2,6 +2,8 @@ import {model, models, Schema} from "mongoose";
 
 const OrderSchema = new Schema({
     email: {type: String, required: true},
+    subTotal: {type: Number},
+    delivery: {type: Number},
     totalPrice: {type: Number},
     products: {type: Object},
     address: {
