@@ -47,9 +47,7 @@ export function AppProvider({children}) {
     function getCartProductsFromDb() {
         fetch('/api/cart').then(response => {
             response.json().then(resData => {
-                if (resData.ok) {
-                    setCartProducts(resData.data.products);
-                }
+                setCartProducts(resData?.data?.products || []);
             })
         })
     }
