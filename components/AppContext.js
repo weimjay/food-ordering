@@ -24,9 +24,10 @@ export function AppProvider({children}) {
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
 
     useEffect(() => {
-        if (ls && ls.getItem('cart')) {
+        /*if (ls && ls.getItem('cart')) {
             setCartProducts(JSON.parse(ls.getItem('cart')));
-        }
+        }*/
+        getCartProductsFromDb();
     }, []);
 
     function clearCart() {
@@ -43,11 +44,35 @@ export function AppProvider({children}) {
         toast.success('Product removed');
     }
 
+    function getCartProductsFromDb() {
+        fetch('/api/cart').then(response => {
+            response.json().then(resData => {
+                if (resData.ok) {
+                    console.log(resData);
+                    setCartProducts(resData.data.products);
+                }
+            })
+        })
+    }
+
     function saveCartProductsToLocalStorage(cartProducts) {
         if (ls) {
             ls.setItem('cart', JSON.stringify(cartProducts));
         }
     }
+
+    function saveCartProductsToDb(cartProducts) {
+        fetch('/api/cart', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({cartProducts}),
+        }).then(response => {
+            if (!response.ok) {
+                toast('Got an error, please try again.');
+            }
+        })
+    }
+
     function addToCart(product, size=null, extras=[]) {
         const existingItem = cartProducts.find(item => item._id === product._id);
         let updateProducts;
@@ -63,7 +88,7 @@ export function AppProvider({children}) {
             updateProducts = [...cartProducts, {_id, name, image, basePrice, quantity: 1, size, extras}];
         }
         setCartProducts(updateProducts);
-        saveCartProductsToLocalStorage(updateProducts);
+        saveCartProductsToDb(updateProducts);
         return updateProducts;
     }
     function decrCartQuantity(product) {

@@ -70,8 +70,8 @@ export default function CartPage() {
             <div className="mt-8 grid gap-8 grid-cols-2">
                 <div>
                     {cartProducts?.length === 0 && (
-                        <div className="flex text-xl">
-                            <div className="mr-2">Your cart is empty...</div>
+                        <div className="flex">
+                            <div className="mr-2 text-gray-600">Your cart is empty...</div>
                             <Link className="flex text-primary items-center underline gap-1" href={'/menu'}>
                                 Order now <Right/>
                             </Link>
