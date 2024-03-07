@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
 import {User} from "@/models/User";
+import {isAdmin} from "@/app/api/auth/[...nextauth]/route";
 
 export async function GET(req, {params}) {
     mongoose.connect(process.env.MONGO_URL);
-    const user = await User.findOne({_id: params.id});
-    return Response.json(user);
+    if (await isAdmin()) {
+        const user = await User.findOne({_id: params.id});
+        return Response.json(user);
+    }
+    return Response.json({});
 }
 
 export async function PUT(req, {params}) {

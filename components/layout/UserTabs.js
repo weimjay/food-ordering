@@ -12,9 +12,9 @@ export default function UserTabs({isAdmin}) {
                     <Link className={path === '/categories' ? 'active' : ''} href={'/categories'}>Categories</Link>
                     <Link className={path.includes('menu') ? 'active' : ''} href={'/menu-items'}>Menu Items</Link>
                     <Link className={path.includes('users') ? 'active' : ''} href={'/users'}>Users</Link>
-                    <Link className={path === '/orders' ? 'active' : ''} href={'/orders'}>Orders</Link>
                 </>
             )}
+            <Link className={path === '/orders' ? 'active' : ''} href={'/orders'}>Orders</Link>
         </div>
     );
 }

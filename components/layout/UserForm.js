@@ -45,7 +45,7 @@ export default function UserForm({user, onSubmit}) {
                     setAddressProps={handleAddressChange}
                 />
 
-                {loggedInUser && (
+                {(loggedInUser.admin && loggedInUser.email !== user?.email) && (
                     <div>
                         <label className="p-2 inline-flex items-center gap-2 mb-2" htmlFor="adminCb">
                             <input id="adminCb" type="checkbox" value={'1'} checked={admin} onChange={

@@ -1,18 +1,24 @@
 import mongoose from "mongoose";
 import {Menu} from "@/models/Menu";
-import {useParams} from "next/navigation";
+import {isAdmin} from "@/app/api/auth/[...nextauth]/route";
 
 export async function POST(req) {
     mongoose.connect(process.env.MONGO_URL);
     const data = await req.json();
-    const res = await Menu.create(data);
-    return Response.json(res);
+    if (await isAdmin()) {
+        const res = await Menu.create(data);
+        return Response.json(res);
+    } else {
+        return Response.json({});
+    }
 }
 
 export async function PUT(req) {
     mongoose.connect(process.env.MONGO_URL);
-    const {_id, ...data} = await req.json();
-    await Menu.findByIdAndUpdate(_id, data);
+    if (await isAdmin()) {
+        const {_id, ...data} = await req.json();
+        await Menu.findByIdAndUpdate(_id, data);
+    }
     return Response.json(true);
 }
 
@@ -33,6 +39,8 @@ export async function DELETE(req) {
     const {searchParams} = new URL(req.url);
     const _id = searchParams.get('_id');
     mongoose.connect(process.env.MONGO_URL);
-    await Menu.deleteOne({_id});
+    if (await isAdmin()) {
+        await Menu.deleteOne({_id});
+    }
     return Response.json(true);
 }

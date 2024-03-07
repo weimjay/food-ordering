@@ -1,17 +1,24 @@
 import {Category} from "@/models/Category";
 import mongoose from "mongoose";
+import {isAdmin} from "@/app/api/auth/[...nextauth]/route";
 
 export async function POST(req) {
     mongoose.connect(process.env.MONGO_URL);
     const {name} = await req.json();
-    const res = await Category.create({name});
-    return Response.json(res);
+    if (await isAdmin()) {
+        const res = await Category.create({name});
+        return Response.json(res);
+    } else {
+        return Response.json({});
+    }
 }
 
 export async function PUT(req) {
     mongoose.connect(process.env.MONGO_URL);
     const {_id, name} = await req.json();
-    const res = await Category.updateOne({_id}, {name});
+    if (await isAdmin()) {
+        await Category.updateOne({_id}, {name});
+    }
     return Response.json(true);
 }
 
@@ -24,6 +31,8 @@ export async function DELETE(req) {
     const {searchParams} = new URL(req.url);
     const _id = searchParams.get('_id');
     mongoose.connect(process.env.MONGO_URL);
-    const res = await Category.deleteOne({_id});
-    return Response.json(res);
+    if (await isAdmin()) {
+        await Category.deleteOne({_id});
+    }
+    return Response.json(true);
 }
