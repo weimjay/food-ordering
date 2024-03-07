@@ -1,6 +1,7 @@
 import {getServerSession} from "next-auth";
-import {authOptions, isAdmin} from "@/app/api/auth/[...nextauth]/route";
+import {authOptions} from "@/app/api/auth/[...nextauth]/options";
 import {Order} from "@/models/Order";
+import {isAdmin} from "@/app/api/users/service";
 
 export async function GET(req) {
     const session = await getServerSession(authOptions);
