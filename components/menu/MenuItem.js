@@ -3,6 +3,7 @@ import {CartContext} from "@/components/AppContext";
 import toast from "react-hot-toast";
 import MenuItemTile from "@/components/menu/MenuItemTile";
 import Image from "next/image";
+import useProfile from "@/components/UseProfile";
 
 export default function MenuItem(menuItem) {
     const {image, name, description, basePrice, sizes, extraIngredients} = menuItem;
@@ -10,7 +11,15 @@ export default function MenuItem(menuItem) {
     const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
     const [selectedExtras, setSelectedExtras] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
+    const {loading, data: profile} = useProfile();
     function handleAddToCart() {
+        if (!profile.email) {
+            toast('Please login first. Redirect in 2s...', {icon: '👉'});
+            setTimeout(() => {
+                window.location = '/login';
+            }, 2200);
+            return;
+        }
         const hasOptions = sizes.length > 0 || extraIngredients.length > 0;
         if (hasOptions && !showPopup) {
             setShowPopup(true);
@@ -81,7 +90,7 @@ export default function MenuItem(menuItem) {
                     </div>
                 </div>
             )}
-            <MenuItemTile onAddToCart={handleAddToCart} {...menuItem}/>
+            <MenuItemTile profile={profile} onAddToCart={handleAddToCart} {...menuItem}/>
         </>
     );
 }
