@@ -2,6 +2,74 @@
 @tailwind components;
 @tailwind utilities;
 
+@media (max-width: 991px) {
+    header .logo {
+        @apply ml-6;
+    }
+    header .hamburger > div {
+        transition: transform .5s, opacity .5s;
+        @apply my-2.5 bg-primary h-1 w-6 absolute left-2 rounded-xl;
+    }
+    header .hamburger .top-line {
+        @apply top-4;
+    }
+    header .hamburger .top-line.active {
+        transform: translateY(8px) rotate(45deg);
+    }
+    header .hamburger .center-line {
+        @apply top-6;
+    }
+    header .hamburger .bottom-line {
+        @apply top-8;
+    }
+    header .hamburger .bottom-line.active {
+        transform: translateY(-8px) rotate(-45deg);
+    }
+
+    header .pc-profile {
+        @apply hidden;
+    }
+    header .auth-btn {
+        @apply px-4;
+    }
+}
+
+@media (max-width: 991px) {
+    header .nav-menu {
+        display: none !important;
+    }
+    .side-nav {
+        @apply bg-white fixed top-16 left-0 w-52 h-full z-10;
+        transition: transform .7s, opacity 1s;
+        border-right: solid 1px #9e9ea6;
+    }
+    header ul {
+        @apply block font-semibold text-gray-600 px-4 mt-4 overflow-hidden;
+    }
+    header ul li {
+        border-bottom: solid 1px #9e9ea6;
+        @apply mb-5 w-full;
+    }
+    header .auth-nav {
+        @apply mr-2 gap-3;
+    }
+    .home-menu .best-seller {
+        @apply grid-cols-1;
+    }
+    .menu .menu-list {
+        @apply grid-cols-2;
+    }
+    .menu .menu-list button {
+        @apply text-sm gap-2 px-0 py-2;
+    }
+}
+
+@media (min-width: 991px) {
+    header .mb-profile {
+        @apply hidden;
+    }
+}
+
 section.hero{
     @apply block md:grid;
     grid-template-columns: .4fr .6fr;
