@@ -13,7 +13,7 @@ export default function Hero() {
                     <span className="text-primary">Pizza</span>
                 </h1>
                 <p className="my-6 text-gray-500">
-                    Hello Pizza! Hope you enjoy your Pizza!
+                    If you can dream it we can make it!
                 </p>
                 <div className="flex gap-4 text-sm">
                     <Link href={'/menu'} className="flex w-full justify-center bg-primary uppercase items-center

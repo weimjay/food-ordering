@@ -37,9 +37,11 @@ export default function Header() {
                         <li role="menuitem">
                             <Link href={'/menu'}>Menu</Link>
                         </li>
-                        <li role="menuitem">
-                            <Link href={'/orders'}>Orders</Link>
-                        </li>
+                        {status === 'authenticated' && (
+                            <li role="menuitem">
+                                <Link href={'/orders'}>Orders</Link>
+                            </li>
+                        )}
                         <li role="menuitem">
                             <Link href={'/#about'}>About</Link>
                         </li>

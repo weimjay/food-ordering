@@ -67,7 +67,7 @@ export default function CartPage() {
            <div className="text-center">
                <SectionHeaders mainHeader="Cart" />
            </div>
-            <div className="mt-8 grid gap-8 grid-cols-2">
+            <div className="cart-container mt-8 grid gap-8 grid-cols-2">
                 <div>
                     {cartProducts?.length === 0 && (
                         <div className="flex">
@@ -81,20 +81,20 @@ export default function CartPage() {
                         <CartProduct key={product._id + "-" + index} product={product} index={index} {...cartCtx} />
                     ))}
                     {cartProducts?.length > 0 && (
-                        <div className="ml-72 mr-[3.7rem] ">
+                        <div className="cart-summary">
                             <table className="w-full text-right border-collapse">
                                 <tbody>
                                 <tr>
-                                    <td className="pt-2 pr-2 text-gray-500">Subtotal:</td>
-                                    <td className="pt-2 pr-1 text-lg text-right font-semibold">${subTotal}</td>
+                                    <td className="pt-2 pr-2 pl-32 text-gray-500">Subtotal:</td>
+                                    <td className="pt-2 pr-1.5 text-lg text-right font-semibold">${subTotal}</td>
                                 </tr>
                                 <tr>
                                     <td className="pr-2 text-gray-500">Delivery:</td>
-                                    <td className="pr-1 text-lg text-right font-semibold">${delivery}</td>
+                                    <td className="pr-1.5 text-lg text-right font-semibold">${delivery}</td>
                                 </tr>
                                 <tr className="text-primary text-lg font-semibold">
-                                    <td className="py-1 pr-2  ">Total:</td>
-                                    <td className="py-1 pr-1 text-right">${subTotal + delivery}
+                                    <td className="py-1 pr-2">Total:</td>
+                                    <td className="py-1 pr-1.5 text-right">${subTotal + delivery}
                                     </td>
                                 </tr>
                                 </tbody>
