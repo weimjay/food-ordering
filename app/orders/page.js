@@ -4,6 +4,7 @@ import useProfile from "@/components/UseProfile";
 import {useEffect, useState} from "react";
 import {dbTimeForHuman} from "@/libs/datetime";
 import Link from "next/link";
+import Right from "@/components/icons/Right";
 
 export default function OrdersPage() {
 
@@ -33,30 +34,33 @@ export default function OrdersPage() {
                     <div>Loading orders...</div>
                 )}
                 {orders?.length > 0 && orders.map(order => (
-                    <div key={order._id} className="bg-gray-100 mb-2 p-4 rounded-lg flex flex-col md:flex-row items-center gap-5">
-                        <div className="grow flex flex-col md:flex-row items-center gap-5">
-                            <div>
-                                <div className={
-                                    (order.paid ? 'bg-green-500' : 'bg-red-400')
-                                    + ' p-2 rounded-md text-white w-24 text-center'
-                                }>
-                                    {order.paid ? 'Paid' : 'Not paid'}
-                                </div>
+                    <div key={order._id} className="bg-gray-100 mb-2 p-3 rounded-lg grid justify-stretch items-center gap-4">
+                        <div className="flex items-center gap-4 text-sm">
+                            <div className={
+                                (order.paid ? 'bg-green-500' : 'bg-red-400')
+                                + ' py-2 rounded-md text-white w-1/6 text-center'
+                            }>
+                                {order.paid ? 'Paid' : 'Not paid'}
                             </div>
-                            <div className="grow">
+                            <div className="w-2/5">
                                 <div className="gap-2 items-center mb-1">
-                                    <div className="grow">{order.email}</div>
+                                    <div className="">{order.email}</div>
                                     <div className="text-gray-500 text-xs max-w-80">
                                         {order.products.map(p => p.name).join(', ')}
                                     </div>
                                 </div>
                             </div>
-                            <div className="text-gray-500 text-sm font-semibold">${order.totalPrice}</div>
-                            <div className="text-gray-500 text-sm">{dbTimeForHuman(order.createdAt)}</div>
-
-                        </div>
-                        <div className="border border-gray-300 px-2.5 py-2 rounded-xl text-gray-700 font-semibold">
-                            <Link href={"/orders/" + order._id}>Show order</Link>
+                            <div className="flex gap-3">
+                                <div className="text-gray-500 font-semibold">${order.totalPrice}</div>
+                                <div className="text-gray-500 ">{dbTimeForHuman(order.createdAt)}</div>
+                            </div>
+                            {/*<div*/}
+                            {/*    className="flex-row border border-gray-300 px-2 py-2 rounded-xl text-sm text-gray-700 font-semibold">*/}
+                            {/*    <Link href={"/orders/" + order._id}>Show order</Link>*/}
+                            {/*</div>*/}
+                            <div className="text-gray-600">
+                                <Link href={"/orders/" + order._id}><Right /></Link>
+                            </div>
                         </div>
                     </div>
                 ))}
