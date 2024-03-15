@@ -38,7 +38,7 @@ export default function OrdersPage() {
                         <div className="flex items-center gap-4 text-sm">
                             <div className={
                                 (order.paid ? 'bg-green-500' : 'bg-red-400')
-                                + ' py-2 rounded-md text-white w-1/6 text-center'
+                                + ' py-2 rounded-md text-white w-1/6  text-center'
                             }>
                                 {order.paid ? 'Paid' : 'Not paid'}
                             </div>
@@ -50,14 +50,10 @@ export default function OrdersPage() {
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex gap-3">
-                                <div className="text-gray-500 font-semibold">${order.totalPrice}</div>
+                            <div className="flex gap-3 w-2/5">
+                                <div className="text-gray-500 font-semibold w-1/3">${order.totalPrice}</div>
                                 <div className="text-gray-500 ">{dbTimeForHuman(order.createdAt)}</div>
                             </div>
-                            {/*<div*/}
-                            {/*    className="flex-row border border-gray-300 px-2 py-2 rounded-xl text-sm text-gray-700 font-semibold">*/}
-                            {/*    <Link href={"/orders/" + order._id}>Show order</Link>*/}
-                            {/*</div>*/}
                             <div className="text-gray-600">
                                 <Link href={"/orders/" + order._id}><Right /></Link>
                             </div>
