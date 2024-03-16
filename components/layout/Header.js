@@ -26,10 +26,10 @@ export default function Header() {
                     <Link href={'/#contact'}>Contact</Link>
                 </div>
             </nav>
-            <div id="js-hamburger" className="hamburger" title="Menu" onClick={() => setShowSideMenu(prev => !prev)}>
-                <div id="js-top-line" className={`top-line ${showSideMenu ? 'active' : ''}`}></div>
-                <div id="js-center-line" className={`center-line ${showSideMenu ? 'hidden' : ''}`}></div>
-                <div id="js-bottom-line" className={`bottom-line ${showSideMenu ? 'active' : ''}`}></div>
+            <div className="hamburger" title="Menu" onClick={() => setShowSideMenu(prev => !prev)}>
+                <div className={`top-line ${showSideMenu ? 'active' : ''}`}></div>
+                <div className={`center-line ${showSideMenu ? 'hidden' : ''}`}></div>
+                <div className={`bottom-line ${showSideMenu ? 'active' : ''}`}></div>
             </div>
             {showSideMenu && (
                 <nav className="side-nav" role="menubar">

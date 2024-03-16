@@ -10,11 +10,11 @@
         transition: transform .5s, opacity .5s;
         @apply my-2.5 bg-primary h-1 w-6 absolute left-2 rounded-xl;
     }
-    header .hamburger .top-line {
-        @apply top-4;
-    }
     header .hamburger .top-line.active {
         transform: translateY(8px) rotate(45deg);
+    }
+    header .hamburger .top-line {
+        @apply top-4;
     }
     header .hamburger .center-line {
         @apply top-6;
@@ -30,7 +30,7 @@
         @apply hidden;
     }
     header .auth-nav {
-        @apply mr-2 gap-3;
+        @apply mr-2 gap-2;
     }
     header .auth-btn {
         @apply px-4;
@@ -66,6 +66,18 @@
 
     .cart-container {
         @apply grid-cols-1;
+    }
+}
+
+@media (max-width: 399px) {
+    header .logo {
+        @apply ml-5 text-xl;
+    }
+    header .hamburger > div {
+        @apply my-2 w-[1.3rem];
+    }
+    header .auth-nav {
+        @apply text-sm;
     }
 }
 
