@@ -1,6 +1,6 @@
 import AddToCartButton from "@/components/menu/AddToCartButton";
 
-export default function MenuItemTile({profile, onAddToCart, ...item}) {
+export default function MenuItemTile({onAddToCart, ...item}) {
     const {image, name, description, basePrice, sizes, extraIngredients} = item;
     const hasSizesOrExtras = sizes?.length > 0 || extraIngredients?.length > 0;
     return (
@@ -14,7 +14,6 @@ export default function MenuItemTile({profile, onAddToCart, ...item}) {
                 {description}
             </p>
             <AddToCartButton
-                profile={profile}
                 hasSizesOrExtras={hasSizesOrExtras}
                 onClick={onAddToCart}
                 basePrice={basePrice}

@@ -1,9 +1,10 @@
-import {useContext, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {CartContext} from "@/components/AppContext";
 import toast from "react-hot-toast";
 import MenuItemTile from "@/components/menu/MenuItemTile";
 import Image from "next/image";
-import useProfile from "@/components/UseProfile";
+import {getSession} from "next-auth/react";
+import {usePathname, useRouter} from "next/navigation";
 
 export default function MenuItem(menuItem) {
     const {image, name, description, basePrice, sizes, extraIngredients} = menuItem;
@@ -11,12 +12,15 @@ export default function MenuItem(menuItem) {
     const [selectedSize, setSelectedSize] = useState(sizes?.[0] || null);
     const [selectedExtras, setSelectedExtras] = useState([]);
     const [showPopup, setShowPopup] = useState(false);
-    const {loading, data: profile} = useProfile();
-    function handleAddToCart() {
-        if (!profile.email) {
+    const router = useRouter();
+    const pathname = usePathname();
+
+    async function handleAddToCart() {
+        const session = await getSession();
+        if (!session) {
             toast('Please login first. Redirect in 2s...', {icon: '👉'});
             setTimeout(() => {
-                window.location = '/login';
+                router.push(`/login?referrer=${encodeURIComponent(pathname)}`);
             }, 2200);
             return;
         }
@@ -90,7 +94,7 @@ export default function MenuItem(menuItem) {
                     </div>
                 </div>
             )}
-            <MenuItemTile profile={profile} onAddToCart={handleAddToCart} {...menuItem}/>
+            <MenuItemTile onAddToCart={handleAddToCart} {...menuItem}/>
         </>
     );
 }

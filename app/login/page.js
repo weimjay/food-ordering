@@ -3,16 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
 import {signIn} from "next-auth/react";
+import {useSearchParams} from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginInProgress, setLoginInProgress] = useState(false);
+    const searchParams = useSearchParams();
+    const referrer = searchParams.get('referrer') || '/';
     async function handleFormSubmit(ev) {
         ev.preventDefault();
         setLoginInProgress(true);
 
-        await signIn('credentials', {email, password, callbackUrl: '/'});
+        await signIn('credentials', {email, password, callbackUrl: referrer});
 
         setLoginInProgress(false);
     }
@@ -32,7 +35,7 @@ export default function LoginPage() {
                 <div className="my-4 text-center text-gray-500">
                     or login with provider
                 </div>
-                <button type="button" onClick={() => {signIn('google', {callbackUrl: '/'})}}
+                <button type="button" onClick={() => {signIn('google', {callbackUrl: referrer})}}
                         className="flex gap-4 justify-center">
                     <Image src={'/google.png'} alt={''} width={24} height={24}/>
                     Login with Google
