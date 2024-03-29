@@ -3,14 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import {useState} from "react";
 import {signIn} from "next-auth/react";
-import {useSearchParams} from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginInProgress, setLoginInProgress] = useState(false);
-    const searchParams = useSearchParams();
-    const referrer = searchParams.get('referrer') || '/';
+    const params = new URLSearchParams(document.location.search);
+    const referrer = params.get('referrer') || '/';
+
     async function handleFormSubmit(ev) {
         ev.preventDefault();
         setLoginInProgress(true);
