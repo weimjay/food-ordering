@@ -10,6 +10,8 @@ import toast from "react-hot-toast";
 import CartProduct from "@/components/menu/CartProduct";
 import Link from "next/link";
 import Right from "@/components/icons/Right";
+import {getSession} from "next-auth/react";
+import {usePathname, useRouter} from "next/navigation";
 
 export default function CartPage() {
     const {cartProducts, addToCart, decrCartQuantity, removeCartProduct, clearCart} = useContext(CartContext);
@@ -17,6 +19,8 @@ export default function CartPage() {
     const delivery = 5;
     const [address, setAddress] = useState({phone: '', street: '', postcode: '', city: '', country: ''});
     const {data: profile} = useProfile();
+    const router = useRouter();
+    const pathname = usePathname();
 
     useEffect(() => {
         if (profile?.city) {
@@ -37,6 +41,14 @@ export default function CartPage() {
     }
     async function handleCartCheckout(ev) {
         ev.preventDefault();
+        const session = await getSession();
+        if (!session) {
+            toast('Please login first. Redirect in 2s...', {icon: '👉'});
+            setTimeout(() => {
+                router.push(`/login?referrer=${encodeURIComponent(pathname)}`);
+            }, 2200);
+            return;
+        }
         const createPromise = new Promise( async (resolve, reject) => {
             const data = {cartProducts, subTotal, delivery, address}
             await fetch('/api/checkout', {

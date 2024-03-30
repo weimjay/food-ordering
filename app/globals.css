@@ -4,11 +4,11 @@
 
 @media (max-width: 991px) {
     header .logo {
-        @apply ml-6;
+        @apply ml-6 text-[1.3rem] pt-1;
     }
     header .hamburger > div {
         transition: transform .5s, opacity .5s;
-        @apply my-2.5 bg-primary h-1 w-6 absolute left-2 rounded-xl;
+        @apply my-3 bg-primary h-1 w-6 absolute left-2 rounded-xl;
     }
     header .hamburger .top-line.active {
         transform: translateY(8px) rotate(45deg);

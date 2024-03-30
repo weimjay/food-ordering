@@ -1,5 +1,5 @@
 "use client";
-import {SessionProvider} from "next-auth/react";
+import {getSession, SessionProvider, useSession} from "next-auth/react";
 import {createContext, useEffect, useState} from "react";
 import toast from "react-hot-toast";
 
@@ -22,13 +22,14 @@ export function cartProductPrice(cartProduct) {
 export function AppProvider({children}) {
     const [cartProducts, setCartProducts] = useState([]);
     const ls = typeof window !== 'undefined' ? window.localStorage : null;
+    const {data: session} = useSession();
 
     useEffect(() => {
         /*if (ls && ls.getItem('cart')) {
             setCartProducts(JSON.parse(ls.getItem('cart')));
         }*/
         getCartProductsFromDb();
-    }, []);
+    }, [session]);
 
     function clearCart() {
         setCartProducts([]);
@@ -45,11 +46,23 @@ export function AppProvider({children}) {
     }
 
     function getCartProductsFromDb() {
-        fetch('/api/cart').then(response => {
-            response.json().then(resData => {
-                setCartProducts(resData?.data?.products || []);
+        let localCart = [];
+        if (ls && ls.getItem('cart')) {
+            localCart = JSON.parse(ls.getItem('cart'));
+        }
+        if (!session) {
+            setCartProducts(localCart);
+        } else {
+            if (localCart.length > 0) {
+                saveCartProductsToDb(localCart);
+                saveCartProductsToLocalStorage([]);
+            }
+            fetch('/api/cart').then(response => {
+                response.json().then(resData => {
+                    setCartProducts(resData?.data?.products || []);
+                })
             })
-        })
+        }
     }
 
     function saveCartProductsToLocalStorage(cartProducts) {
@@ -59,13 +72,17 @@ export function AppProvider({children}) {
     }
 
     function saveCartProductsToDb(cartProducts) {
-        fetch('/api/cart', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({cartProducts}),
-        }).then(response => {
-            return response.json();
-        })
+        if (!session) {
+            saveCartProductsToLocalStorage(cartProducts);
+        } else {
+            fetch('/api/cart', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({cartProducts}),
+            }).then(response => {
+                return response.json();
+            })
+        }
     }
 
     function addToCart(product, size=null, extras=[]) {
@@ -98,10 +115,8 @@ export function AppProvider({children}) {
     }
 
     return (
-        <SessionProvider>
-            <CartContext.Provider value={{cartProducts, setCartProducts, addToCart, decrCartQuantity, removeCartProduct, clearCart}}>
-                {children}
-            </CartContext.Provider>
-        </SessionProvider>
+        <CartContext.Provider value={{cartProducts, setCartProducts, addToCart, decrCartQuantity, removeCartProduct, clearCart}}>
+            {children}
+        </CartContext.Provider>
     );
 }
