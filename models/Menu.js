@@ -13,6 +13,7 @@ const MenuSchema = new Schema({
     basePrice: {type: Number},
     sizes: {type: [ExtraPriceSchema]},
     extraIngredients: {type: [ExtraPriceSchema]},
+    tag: {type: String},
 }, {timestamps: true});
 
 export const Menu = models?.Menu || model('Menu', MenuSchema);

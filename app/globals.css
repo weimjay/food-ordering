@@ -54,7 +54,7 @@
         @apply mb-5 w-full;
     }
 
-    .home-menu .best-seller {
+    .home-menu > .best-seller, .deals {
         @apply grid-cols-1;
     }
     .menu .menu-list {
@@ -90,6 +90,18 @@
 section.hero{
     @apply block md:grid;
     grid-template-columns: .4fr .6fr;
+}
+
+@keyframes rotation{
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(359deg);
+    }
+}
+section.hero img.pizza{
+    animation: rotation 10s linear;
 }
 
 select,

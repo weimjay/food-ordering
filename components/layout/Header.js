@@ -22,7 +22,7 @@ export default function Header() {
                 <div className="nav-menu flex gap-8">
                     <Link href={'/'}>Home</Link>
                     <Link href={'/menu'}>Menu</Link>
-                    <Link href={'/#about'}>About</Link>
+                    <Link href={'/story'}>Our Story</Link>
                     <Link href={'/#contact'}>Contact</Link>
                 </div>
             </nav>
@@ -43,7 +43,7 @@ export default function Header() {
                             </li>
                         )}
                         <li role="menuitem">
-                            <Link href={'/#about'}>About</Link>
+                            <Link href={'/story'}>Our Story</Link>
                         </li>
                         <li role="menuitem">
                             <Link href={'/#contact'}>Contact</Link>

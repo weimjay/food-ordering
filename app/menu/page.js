@@ -10,7 +10,7 @@ export default function MenuPage() {
 
     useEffect(() => {
         fetch('/api/categories').then(response => {
-            response.json().then(categories => setCategories(categories));
+            response.json().then(categories => setCategories(categories.filter(v => v.name !== 'Deals')));
         })
         fetch('/api/menu-items').then(response => {
             response.json().then(menuItems => setMenuItems(menuItems));

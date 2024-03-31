@@ -5,7 +5,7 @@ import Link from "next/link";
 export default function Hero() {
     return (
         <section className="hero mt-4">
-            <div className="py-12">
+            <div className="pt-12 pb-8">
                 <h1 className="text-4xl font-semibold">
                     Everything<br/>
                     is better<br/>
@@ -28,8 +28,8 @@ export default function Hero() {
                     </Link>
                 </div>
             </div>
-            <div className="relative">
-                <Image src={'/pizza.png'} layout={'fill'} objectFit={'contain'} alt={'pizza'}/>
+            <div className="flex items-center justify-center mb-4">
+                <Image className='pizza' src={'/pizza.webp'} width={320} height={320} alt={'pizza'}/>
             </div>
         </section>
     )

@@ -1,11 +1,12 @@
 import AddToCartButton from "@/components/menu/AddToCartButton";
+import {useState} from "react";
 
 export default function MenuItemTile({onAddToCart, ...item}) {
     const {image, name, description, basePrice, sizes, extraIngredients} = item;
     const hasSizesOrExtras = sizes?.length > 0 || extraIngredients?.length > 0;
     return (
-        <div className="bg-gray-200 p-4 rounded-lg text-center group
-                hover:bg-white hover:shadow-md hover:shadow-black/25 transition-all">
+        <div className={`bg-orange-100 p-4 rounded-lg text-center group
+                hover:bg-white hover:shadow-md hover:shadow-black/25 transition-all`}>
             <div className="text-center">
                 <img className="max-h-auto max-h-24 block mx-auto" src={image} alt="pizza"/>
             </div>
