@@ -32,21 +32,21 @@ export default function Header() {
                 <div className={`bottom-line ${showSideMenu ? 'active' : ''}`}></div>
             </div>
             {showSideMenu && (
-                <nav className="side-nav" role="menubar">
+                <nav className="side-nav">
                     <ul role="group" onClick={() => setShowSideMenu(prev => !prev)}>
-                        <li role="menuitem">
-                            <Link href={'/menu'}>Menu</Link>
+                        <li>
+                            <Link className='block' href={'/menu'}>Menu</Link>
                         </li>
                         {status === 'authenticated' && (
-                            <li role="menuitem">
-                                <Link href={'/orders'}>Orders</Link>
+                            <li>
+                                <Link className='block' href={'/orders'}>Orders</Link>
                             </li>
                         )}
-                        <li role="menuitem">
-                            <Link href={'/story'}>Our Story</Link>
+                        <li>
+                            <Link className='block' href={'/story'}>Our Story</Link>
                         </li>
-                        <li role="menuitem">
-                            <Link href={'/#contact'}>Contact</Link>
+                        <li>
+                            <Link className='block' href={'/#contact'}>Contact</Link>
                         </li>
                     </ul>
                 </nav>
