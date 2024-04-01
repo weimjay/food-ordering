@@ -7,6 +7,7 @@ export default function StoryPage() {
                 <SectionHeaders
                     mainHeader={'Casino History'}
                 />
+                <img className="rounded-2xl mt-4" src="/pizza-history.webp" alt={''}/>
                 <div className="text-gray-500 max-w-md mx-auto mt-4 flex flex-col gap-4">
                     <p>Casino has
                         given you a taste of the best of pizza and beyond since 1985. Get to
@@ -34,7 +35,7 @@ export default function StoryPage() {
             </section>
 
             <section className="text-center mb-16">
-                <div className="text-gray-500 max-w-md mx-auto mt-4 flex flex-col gap-4">
+            <div className="text-gray-500 max-w-md mx-auto mt-4 flex flex-col gap-4">
                     <p className="">
                         We are the Australian-owned master franchise holder for Casino in Australia,
                         New Zealand, Belgium, France, the Netherlands, Japan, Germany, Luxembourg, Taiwan,
