@@ -12,11 +12,10 @@ export default function UsersPage() {
     useEffect(() => {
         fetch('/api/users').then(response => {
            response.json().then(users => {
-               console.log('Users: ', users);
                 setUsers(users);
            })
         });
-    }, [loading]);
+    }, []);
 
     if (loading) {
         return 'Profile loading!';
