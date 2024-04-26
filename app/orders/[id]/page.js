@@ -13,6 +13,9 @@ export default function OrderPage() {
     const {id} = useParams();
 
     useEffect(() => {
+        if (typeof window.console !== 'undefined' && window.location.href.includes('clear-cart=1')) {
+            clearCart();
+        }
         if (id) {
             setLoadingOrder(true);
             fetch('/api/orders?_id='+id).then(response => {

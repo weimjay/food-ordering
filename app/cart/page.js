@@ -23,6 +23,12 @@ export default function CartPage() {
     const pathname = usePathname();
 
     useEffect(() => {
+        if (typeof window !== 'undefined' && window.location.href.includes('canceled=1')) {
+            toast.error('Payment failed 😔');
+        }
+    }, []);
+
+    useEffect(() => {
         if (profile?.city) {
             const {phone, street, postcode, city, country} = profile;
             const addressFromProfile = {phone, street, postcode, city, country};
@@ -58,7 +64,6 @@ export default function CartPage() {
             }).then(response => {
                 response.json().then(resData => {
                     if (resData.ok) {
-                        clearCart();
                         resolve();
                         window.location = resData.redirect;
                     } else {
@@ -83,7 +88,7 @@ export default function CartPage() {
                 <div>
                     {cartProducts?.length === 0 && (
                         <div className="flex">
-                            <div className="mr-2 text-gray-600">Your cart is empty...</div>
+                            <div className="mr-2 text-gray-600">Your shopping cart is empty...</div>
                             <Link className="flex text-primary items-center underline gap-1" href={'/menu'}>
                                 Order now <Right/>
                             </Link>

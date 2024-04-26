@@ -72,17 +72,14 @@ export function AppProvider({children}) {
     }
 
     function saveCartProductsToDb(cartProducts) {
-        if (!session) {
-            saveCartProductsToLocalStorage(cartProducts);
-        } else {
-            fetch('/api/cart', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({cartProducts}),
-            }).then(response => {
-                return response.json();
-            })
-        }
+        saveCartProductsToLocalStorage(cartProducts);
+        fetch('/api/cart', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({cartProducts}),
+        }).then(response => {
+            return response.json();
+        })
     }
 
     function addToCart(product, size=null, extras=[]) {
